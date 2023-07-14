@@ -274,4 +274,4 @@ def send_article(article_id):
     return {'message': 'Successfully sent emails'}, 200
 
 if __name__ == '__main__':
-    app.run(host='localhost', port=9874)
+    app.run(debug=True)
