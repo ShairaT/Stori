@@ -8,10 +8,12 @@ from back.implementations.newsletters_repository_impl import FirebaseNewsletterR
 from back.core.article_services import ArticleService
 from back.implementations.article_repository_impl import FirebaseArticleRepository
 from utils.is_subscribed import is_subscribed
+from flask_cors import CORS, cross_origin
 from dotenv import load_dotenv
 import os
 
 app = Flask(__name__)
+CORS(app)
 
 users_repository = UsersRepositoryImpl()
 user_service = UserService(users_repository)
@@ -25,7 +27,7 @@ article_service = ArticleService(article_repository)
 newsletter_email_service = NewsletterEmailService() 
 
 # Clave de encriptación
-encryption_key = os.getenv("ENCRYPTION_KEY"),
+encryption_key = os.getenv("ENCRYPTION_KEY")
 cipher_suite = Fernet(encryption_key)
 
 
@@ -207,7 +209,6 @@ def subscribe(newsletter_id):
         subscribers = []
         if newsletter.get("subscribers") is not None:
             subscribers = newsletter.get("subscribers")
-        print(subscribers)
         if email in subscribers:
             return jsonify({"message": "User is already subscribed"}), 400
 
@@ -249,9 +250,7 @@ def unsubscribe(newsletter_id, encrypted_email):
 
         if email not in subscribers:
             return jsonify({"message": "Email is already unsubscribed"}), 304   
-        print("subscribers", subscribers)
         subscribers.remove(email)
-        print("subscribers", subscribers)
         success = newsletter_service.update_newsletter(
             newsletter_id, None, None, None, None, subscribers)
         if success:
@@ -265,9 +264,7 @@ def send_article(article_id):
     article = article_service.get_article(article_id)
     if not article:
         return {'message': "Article doesn't exists"}, 404
-    print('article', article)
     newsletter = newsletter_service.get_newsletter(article.get("newsletter_id"))
-    print('newsletter', newsletter)
     if not newsletter:
          return {'message': "Unable to send emails"}, 404
     for subscriber_email in newsletter.get("subscribers"):
@@ -276,4 +273,4 @@ def send_article(article_id):
     return {'message': 'Successfully sent emails'}, 200
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(port=9999, debug=True)

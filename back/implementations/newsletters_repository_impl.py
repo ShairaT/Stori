@@ -20,7 +20,6 @@ class FirebaseNewsletterRepository(NewsletterRepository):
             "description": description,
             "subscribers": []
         }
-        print(subscribers)
         if subscribers is not None:
             newsletter["subscribers"] = subscribers
 
@@ -54,7 +53,6 @@ class FirebaseNewsletterRepository(NewsletterRepository):
             if description:
                 newsletter["description"] = description
             if subscribers is not None:
-                print(subscribers)
                 newsletter["subscribers"] = subscribers
 
             if image_file:
