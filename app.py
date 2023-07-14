@@ -10,6 +10,7 @@ from back.implementations.article_repository_impl import FirebaseArticleReposito
 from utils.is_subscribed import is_subscribed
 from flask_cors import CORS, cross_origin
 from dotenv import load_dotenv
+import json
 import os
 
 app = Flask(__name__)
@@ -67,8 +68,7 @@ def create_newsletter():
         author = request.form.get('author')
         image_file = request.files.get('image_file')
         description = request.form.get('description')
-        subscribers = request.form.get('subscribers')
-
+        subscribers = json.loads(request.form.get('subscribers'))
         newsletter_id = newsletter_service.create_newsletter(
             title, author, image_file, description, subscribers)
         return jsonify({"newsletter_id": newsletter_id}), 201

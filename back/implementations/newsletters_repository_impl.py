@@ -20,7 +20,7 @@ class FirebaseNewsletterRepository(NewsletterRepository):
             "description": description,
             "subscribers": []
         }
-        if subscribers is not None:
+        if len(subscribers) > 0:
             newsletter["subscribers"] = subscribers
 
         # Guardar el newsletter en la base de datos
