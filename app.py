@@ -8,6 +8,8 @@ from back.implementations.newsletters_repository_impl import FirebaseNewsletterR
 from back.core.article_services import ArticleService
 from back.implementations.article_repository_impl import FirebaseArticleRepository
 from utils.is_subscribed import is_subscribed
+from dotenv import load_dotenv
+import os
 
 app = Flask(__name__)
 
@@ -23,7 +25,7 @@ article_service = ArticleService(article_repository)
 newsletter_email_service = NewsletterEmailService() 
 
 # Clave de encriptación
-encryption_key = "suRZHEWszqS6MkT__MjfdvZ7QGYTkAw5U7bV9g0FSFk="
+encryption_key = os.getenv("ENCRYPTION_KEY"),
 cipher_suite = Fernet(encryption_key)
 
 

@@ -1,0 +1,23 @@
+# Story backend newsletter app
+
+Este repositorio contiene una aplicación en Python desarrollada con Flask. La aplicación utiliza un Dockerfile para facilitar el despliegue y la ejecución en contenedores Docker.
+
+## Requisitos
+
+- Docker: Asegúrate de tener Docker instalado en tu máquina.
+
+## Instrucciones de Uso
+
+1. Clonar el repositorio
+
+```bash
+git clone https://github.com/tu-usuario/tu-repositorio.git
+```
+2. Construir la imagen de Docker
+```bash
+docker build --tag python-docker .
+```
+3. Ejecutar el contenedor Docker
+```bash
+docker run --rm -it -p 8080:5000 python-docker
+```
