@@ -1,7 +1,11 @@
-def is_subscribed(newsletter, email):
-    subscribers = []
-    if newsletter is not None and newsletter.get("subscribers") is not None:
-            subscribers = newsletter.get("subscribers")
-    if email in subscribers:
-        return True
-    return False
+from cryptography.fernet import Fernet
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+encryption_key = os.getenv("ENCRYPTION_KEY")
+cipher_suite = Fernet(encryption_key)
+
+def encrypt_email(email):
+    return cipher_suite.encrypt(email.encode()).decode()

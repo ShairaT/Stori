@@ -11,7 +11,7 @@ Este repositorio contiene una aplicación en Python desarrollada con Flask. La a
 1. Clonar el repositorio
 
 ```bash
-git clone https://github.com/tu-usuario/tu-repositorio.git
+git clone https://github.com/ShairaT/Stori
 ```
 2. Construir la imagen de Docker
 ```bash

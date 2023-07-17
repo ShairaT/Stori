@@ -1,3 +1,4 @@
+from operator import ne
 from flask import Flask, request, jsonify
 from cryptography.fernet import Fernet
 from back.core.newsletter_email_service import NewsletterEmailService
@@ -13,6 +14,7 @@ from dotenv import load_dotenv
 import json
 import os
 
+load_dotenv()
 app = Flask(__name__)
 CORS(app)
 
@@ -27,7 +29,6 @@ article_service = ArticleService(article_repository)
 
 newsletter_email_service = NewsletterEmailService() 
 
-# Clave de encriptación
 encryption_key = os.getenv("ENCRYPTION_KEY")
 cipher_suite = Fernet(encryption_key)
 
@@ -40,7 +41,6 @@ def login():
 
     try:
         user = user_service.login_user(email, password)
-        # Lógica adicional después del inicio de sesión exitoso
         return jsonify({"message": 'Inicio de sesión exitoso', 'user': user}), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 400
@@ -53,12 +53,9 @@ def register():
 
     try:
         user = user_service.register_user(email, password)
-        # Lógica adicional después del registro exitoso
         return jsonify({"message": 'Registro exitoso', 'user': user}), 201
     except Exception as e:
         return jsonify({'error': str(e)}), 400
-
-# Endpoint para crear un nuevo newsletter
 
 
 @app.route('/newsletters', methods=['POST'])
@@ -74,8 +71,6 @@ def create_newsletter():
         return jsonify({"newsletter_id": newsletter_id}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 400
-
-# Endpoint para obtener un newsletter por su ID
 
 
 @app.route('/newsletters/<newsletter_id>', methods=['GET'])
@@ -94,8 +89,6 @@ def get_newsletters():
         return jsonify(newsletters), 200
     else:
         return jsonify({"message": "There are not newsletters"}), 404
-
-# Endpoint para actualizar un newsletter por su ID
 
 
 @app.route('/newsletters/<newsletter_id>', methods=['PUT'])
@@ -116,8 +109,6 @@ def update_newsletter(newsletter_id):
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
-# Endpoint para eliminar un newsletter por su ID
-
 
 @app.route('/newsletters/<newsletter_id>', methods=['DELETE'])
 def delete_newsletter(newsletter_id):
@@ -126,8 +117,6 @@ def delete_newsletter(newsletter_id):
         return jsonify({"message": "Newsletter deleted"}), 200
     else:
         return jsonify({"message": "Newsletter not found"}), 404
-
-# Endpoint para crear un nuevo article
 
 
 @app.route('/articles', methods=['POST'])
@@ -143,8 +132,6 @@ def create_article():
         return jsonify({"article_id": article_id}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 400
-
-# Endpoint para obtener un article por su ID
 
 
 @app.route('/articles/<article_id>', methods=['GET'])
@@ -164,8 +151,6 @@ def get_articles():
     else:
         return jsonify({"message": "There are not articles"}), 404
 
-# Endpoint para actualizar un article por su ID
-
 
 @app.route('/article/<article_id>', methods=['PUT'])
 def update_article(article_id):
@@ -183,8 +168,6 @@ def update_article(article_id):
             return jsonify({"message": "Newsletter not found"}), 404
     except Exception as e:
         return jsonify({"error": str(e)}), 400
-
-# Endpoint para eliminar un article por su ID
 
 
 @app.route('/articles/<article_id>', methods=['DELETE'])
@@ -210,7 +193,7 @@ def subscribe(newsletter_id):
         if newsletter.get("subscribers") is not None:
             subscribers = newsletter.get("subscribers")
         if email in subscribers:
-            return jsonify({"message": "User is already subscribed"}), 400
+            return jsonify({"message": "User is already subscribed"}), 204
 
         subscribers.append(email)
         success = newsletter_service.update_newsletter(
@@ -249,7 +232,7 @@ def unsubscribe(newsletter_id, encrypted_email):
             subscribers = newsletter.get("subscribers")
 
         if email not in subscribers:
-            return jsonify({"message": "Email is already unsubscribed"}), 304   
+            return jsonify({"message": "Email is already unsubscribed"}), 204   
         subscribers.remove(email)
         success = newsletter_service.update_newsletter(
             newsletter_id, None, None, None, None, subscribers)
@@ -265,7 +248,7 @@ def send_article(article_id):
     if not article:
         return {'message': "Article doesn't exists"}, 404
     newsletter = newsletter_service.get_newsletter(article.get("newsletter_id"))
-    if not newsletter:
+    if not newsletter and newsletter.get("subscribers") is None:
          return {'message': "Unable to send emails"}, 404
     for subscriber_email in newsletter.get("subscribers"):
         newsletter_email_service.send_article_email(subscriber_email, article)
