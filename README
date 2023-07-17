@@ -1,0 +1,26 @@
+# Story backend newsletter app
+
+Este repositorio contiene una aplicación en Python desarrollada con Flask. La aplicación utiliza un Dockerfile para facilitar el despliegue y la ejecución en contenedores Docker.
+
+## Requisitos
+
+- Docker: Asegúrate de tener Docker instalado en tu máquina.
+
+## Instrucciones de Uso
+
+1. Clonar el repositorio
+
+```bash
+git clone https://github.com/ShairaT/Stori
+```
+
+2. Agregar las variables de entorno en .env, usando .env.example como referencia
+
+3. Instalar dependencias
+```bash
+pip install -r requirements.txt
+```
+4. Ejecutar aplicación
+```bash
+python3 app.py
+```
