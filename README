@@ -13,11 +13,14 @@ Este repositorio contiene una aplicación en Python desarrollada con Flask. La a
 ```bash
 git clone https://github.com/ShairaT/Stori
 ```
-2. Construir la imagen de Docker
+
+2. Agregar las variables de entorno en .env, usando .env.example como referencia
+
+3. Instalar dependencias
 ```bash
-docker build --tag python-docker .
+pip install -r requirements.txt
 ```
-3. Ejecutar el contenedor Docker
+4. Ejecutar aplicación
 ```bash
-docker run --rm -it -p 8080:5000 python-docker
+python3 app.py
 ```
